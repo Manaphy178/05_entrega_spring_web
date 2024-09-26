@@ -7,12 +7,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+
 import com.google.gson.Gson;
 
 import java.util.*;
 import daos.*;
 import daosImpl.*;
 import modelo.*;
+import utilidadesSpring.ContenedorSpring;
 
 @WebServlet("/ServicioProductos")
 public class ServicioProductos extends HttpServlet {
@@ -25,7 +28,8 @@ public class ServicioProductos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		InstrumentosDAO dao = new InstrumentosDAOImpl();
+		ApplicationContext contenedorSpring = ContenedorSpring.obtenerContenedor(super.getServletContext());
+		InstrumentosDAO dao = contenedorSpring.getBean(InstrumentosDAOImpl.class);
 		List<Instrumento> sombrero = dao.obtenerInstrumentos();
 //		Ahora tengo que transformar los libros a json para darselos al cliente
 

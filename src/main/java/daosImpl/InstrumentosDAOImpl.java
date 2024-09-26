@@ -1,71 +1,45 @@
 package daosImpl;
 
-import java.sql.*;
 import java.util.*;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import constantesSQL.ConstantesSQL;
 import modelo.*;
 import daos.InstrumentosDAO;
-import masterDAO.MasterDAO;
+import mappers.InstrumentosMapper;
 
-public class InstrumentosDAOImpl extends MasterDAO implements InstrumentosDAO {
+public class InstrumentosDAOImpl implements InstrumentosDAO {
+	private DataSource ds;
+	private SimpleJdbcInsert simpleInsert;
+	private JdbcTemplate jdbcTemplate;
+
+	public void setDs(DataSource ds) {
+		this.ds = ds;
+		System.out.println("Configurando simple insert");
+		this.simpleInsert = new SimpleJdbcInsert(ds);
+		this.simpleInsert.withTableName("tabla_sombreros");
+		this.jdbcTemplate = new JdbcTemplate(ds);
+	}
+
 	public List<Instrumento> obtenerInstrumentos() {
-		super.conectar();
-		List<Instrumento> instrumentos = new ArrayList<Instrumento>();
-		Statement st;
-		try {
-			st = super.getCon().createStatement();
-			ResultSet rs = st.executeQuery(ConstantesSQL.SQL_OBTENER_INSTRUMENTOS);
-			while (rs.next()) {
-				Instrumento i = new Instrumento();
-				i.setId(rs.getInt("id"));
-				i.setNombre(rs.getString("nombre"));
-				i.setTipo(rs.getString("tipo"));
-				i.setMarca(rs.getString("marca"));
-				i.setGamma(rs.getString("gamma"));
-				i.setDesc(rs.getString("description"));
-				i.setPrecio(rs.getDouble("precio"));
-				instrumentos.add(i);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		super.desconectar();
+		List<Instrumento> instrumentos = this.jdbcTemplate.query(ConstantesSQL.SQL_OBTENER_INSTRUMENTOS,
+				new InstrumentosMapper());
 		return instrumentos;
 	}
 
 	@Override
 	public void registrarInstrumento(Instrumento i) {
-		super.conectar();
-		try {
-			PreparedStatement ps = super.getCon().prepareStatement(ConstantesSQL.SQL_REGISTRAR_INSTRUMENTO);
-			ps.setString(1, i.getNombre());
-			ps.setString(2, i.getTipo());
-			ps.setString(3, i.getMarca());
-			ps.setString(4, i.getDesc());
-			ps.setString(5, i.getGamma());
-			ps.setDouble(6, i.getPrecio());
-			ps.execute();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		super.desconectar();
+		this.jdbcTemplate.update(ConstantesSQL.SQL_REGISTRAR_INSTRUMENTO, i.getNombre(), i.getTipo(), i.getMarca(),
+				i.getDesc(), i.getGamma(), i.getPrecio());
 	}
 
 	@Override
 	public void borrarInstrumento(int id) {
-		super.conectar();
-		try {
-			PreparedStatement ps = super.getCon().prepareStatement(ConstantesSQL.SQL_BORRAR_INSTRUMENTOS);
-			ps.setInt(1, id);
-			ps.execute();
-		} catch (SQLException e) {
-			System.out.println("Esta la mal la sql de borrar");
-			e.printStackTrace();
-		}
-		super.desconectar();
+		this.jdbcTemplate.update(ConstantesSQL.SQL_BORRAR_INSTRUMENTOS, id);
 
 	}
 

@@ -20,4 +20,7 @@
 		<filter-name>filtro-admin</filter-name>
 		<url-pattern>/admin/*</url-pattern>
 	</filter-mapping>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 </web-app>

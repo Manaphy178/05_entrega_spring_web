@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import daos.*;
 import daosImpl.*;
 import modelo.*;
-
+import utilidadesSpring.ContenedorSpring;
 
 @WebServlet("/admin/ServletRegistroInstrumento")
 public class ServletRegistroInstrumento extends HttpServlet {
@@ -26,7 +26,8 @@ public class ServletRegistroInstrumento extends HttpServlet {
 		i.setDesc(request.getParameter("description"));
 		i.setGamma(request.getParameter("gamma"));
 		i.setPrecio(Double.parseDouble(request.getParameter("precio")));
-		InstrumentosDAO instrumentoDAO = new InstrumentosDAOImpl();
+		InstrumentosDAO instrumentoDAO = ContenedorSpring.obtenerContenedor(getServletContext())
+				.getBean(InstrumentosDAOImpl.class);
 		instrumentoDAO.registrarInstrumento(i);
 		response.sendRedirect("ServletListarInstrumento");
 	}

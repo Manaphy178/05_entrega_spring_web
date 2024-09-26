@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import daos.InstrumentosDAO;
 import daosImpl.InstrumentosDAOImpl;
 import modelo.Instrumento;
+import utilidadesSpring.ContenedorSpring;
 
 @WebServlet("/admin/ServletListarInstrumento")
 public class ServletListarInstrumento extends HttpServlet {
@@ -20,10 +21,9 @@ public class ServletListarInstrumento extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("Se ejecuta el metodo doget del servlet, "
-				+ "aqui veremos como acceder a BD y obtener los productos " + "que mostrar en portada");
-		InstrumentosDAO i = new InstrumentosDAOImpl();
-		List<Instrumento> instrumento = i.obtenerInstrumentos();
+		InstrumentosDAO instrumentosDAO = ContenedorSpring.obtenerContenedor(getServletContext())
+				.getBean(InstrumentosDAOImpl.class);
+		List<Instrumento> instrumento = instrumentosDAO.obtenerInstrumentos();
 		request.setAttribute("info", instrumento);
 		RequestDispatcher rd = request.getRequestDispatcher("instrumentos.jsp");
 		rd.forward(request, response);
