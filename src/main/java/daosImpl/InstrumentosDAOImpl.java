@@ -34,7 +34,7 @@ public class InstrumentosDAOImpl implements InstrumentosDAO {
 	@Override
 	public void registrarInstrumento(Instrumento i) {
 		this.jdbcTemplate.update(ConstantesSQL.SQL_REGISTRAR_INSTRUMENTO, i.getNombre(), i.getTipo(), i.getMarca(),
-				i.getDesc(), i.getGamma(), i.getPrecio());
+				i.getGamma(), i.getDesc(), i.getPrecio());
 	}
 
 	@Override

@@ -23,8 +23,8 @@ public class ServletRegistroInstrumento extends HttpServlet {
 		i.setNombre(request.getParameter("nombre"));
 		i.setTipo(request.getParameter("tipo"));
 		i.setMarca(request.getParameter("marca"));
-		i.setDesc(request.getParameter("description"));
 		i.setGamma(request.getParameter("gamma"));
+		i.setDesc(request.getParameter("description"));
 		i.setPrecio(Double.parseDouble(request.getParameter("precio")));
 		InstrumentosDAO instrumentoDAO = ContenedorSpring.obtenerContenedor(getServletContext())
 				.getBean(InstrumentosDAOImpl.class);
